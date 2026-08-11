@@ -3433,8 +3433,20 @@
                     coverEl.style.borderRadius = '16px';
                 }
             } else {
-                // Generate thumbnail using canvas for reliable cover display
-                generateVideoThumbnail(videoUrl, slotEl);
+                // Use static thumbnail image (fast load, no video needed)
+                const coverEl = slotEl.querySelector('.upload-video-cover');
+                if (coverEl) {
+                    coverEl.innerHTML = '';
+                    coverEl.style.background = '#1a1a1a';
+                    coverEl.style.borderRadius = '16px';
+                    const filename = decodeURIComponent(videoUrl.split('/').pop());
+                    const thumbUrl = 'thumbs/' + filename.replace(/\.mp4$/i, '.jpg');
+                    const img = new Image();
+                    img.onload = function() {
+                        coverEl.style.background = 'url("' + thumbUrl + '") center/cover';
+                    };
+                    img.src = thumbUrl;
+                }
             }
         }
 
